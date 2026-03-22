@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>I-20 Enrollment Process</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #ffffff;
+  --surface:  #f8fafc;
+  --border:   #e2e8f0;
+  --text:     #1e293b;
+  --dim:      #94a3b8;
+  --blue:     #2563eb;
+  --blue-bg:  #eff6ff;
+  --blue-bd:  #bfdbfe;
+  --green:    #16a34a;
+  --green-bg: #f0fdf4;
+  --green-bd: #bbf7d0;
+  --orange:   #ea580c;
+  --orange-bg:#fff7ed;
+  --orange-bd:#fed7aa;
+  --amber:    #d97706;
+  --amber-bg: #fffbeb;
+  --amber-bd: #fde68a;
+  --red:      #dc2626;
+  --red-bg:   #fef2f2;
+  --red-bd:   #fecaca;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── HEADER ── */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.top-bar h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.top-bar .sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px;
+  color: var(--dim);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.internal-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  padding: 3px 8px;
+  background: var(--red-bg);
+  border: 1px solid var(--red-bd);
+  color: var(--red);
+  border-radius: 4px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar-wrap {
+  background: var(--surface);
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-track {
+  flex: 1;
+  height: 5px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--blue);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+.progress-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--dim);
+  white-space: nowrap;
+}
+
+/* ── MAIN SCROLL AREA ── */
+.scroll-area {
+  padding: 20px 16px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ── STEP CARD ── */
+.step-card {
+  width: 100%;
+  max-width: 460px;
+  position: relative;
+  animation: fadeUp .32s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* connector line */
+.step-card::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -24px;
+  width: 2px;
+  height: 24px;
+  background: var(--border);
+  transform: translateX(-50%);
+}
+.step-card:first-child::before { display: none; }
+
+.card-inner {
+  border: 1.5px solid;
+  border-radius: 14px;
+  padding: 18px 16px 16px;
+  background: #fff;
+}
+
+.card-inner.type-action    { border-color: var(--blue-bd);  background: var(--blue-bg); }
+.card-inner.type-decision  { border-color: #86efac;          background: var(--green-bg); }
+.card-inner.type-outcome-defer   { border-color: var(--orange-bd); background: var(--orange-bg); }
+.card-inner.type-outcome-pending { border-color: var(--amber-bd);  background: var(--amber-bg); }
+.card-inner.type-outcome-cont    { border-color: var(--green-bd);  background: var(--green-bg); }
+.card-inner.type-milestone { border-color: var(--blue-bd);  background: var(--blue-bg); }
+
+.card-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.type-action   .card-label { color: var(--blue); }
+.type-decision .card-label { color: var(--green); }
+.type-outcome-defer .card-label { color: var(--orange); }
+.type-outcome-pending .card-label { color: var(--amber); }
+.type-outcome-cont .card-label { color: var(--green); }
+.type-milestone .card-label { color: var(--blue); }
+
+.card-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.1;
+}
+
+.card-desc {
+  font-size: 13.5px;
+  color: #475569;
+  line-height: 1.65;
+}
+
+/* ── BUTTONS ── */
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+/* side-by-side only for yes/no */
+.choices.two-col {
+  flex-direction: row;
+}
+
+.choice-btn {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1.5px solid;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.choice-btn.yes {
+  background: #fff;
+  border-color: var(--green);
+  color: var(--green);
+}
+.choice-btn.yes:active { background: var(--green-bg); transform: scale(0.97); }
+
+.choice-btn.no {
+  background: #fff;
+  border-color: #94a3b8;
+  color: #475569;
+}
+.choice-btn.no:active { background: var(--surface); transform: scale(0.97); }
+
+.choice-btn.next-btn {
+  background: #fff;
+  border-color: var(--blue);
+  color: var(--blue);
+}
+.choice-btn.next-btn:active { background: var(--blue-bg); transform: scale(0.97); }
+
+/* locked states */
+.choice-btn.chosen-yes  { background: var(--green); border-color: var(--green);  color: #fff; cursor: default; }
+.choice-btn.chosen-no   { background: #475569;       border-color: #475569;       color: #fff; cursor: default; }
+.choice-btn.chosen-next { background: var(--blue);   border-color: var(--blue);   color: #fff; cursor: default; }
+.choice-btn.faded { opacity: 0.28; cursor: default; }
+
+/* ── BREADCRUMB TRAIL ── */
+.breadcrumb {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 6px;
+  padding: 0 2px;
+}
+
+.bc-chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  padding: 3px 8px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.bc-chip .bc-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+}
+
+/* ── END CARD ── */
+.end-card {
+  width: 100%;
+  max-width: 460px;
+  text-align: center;
+  padding: 28px 20px;
+  border: 2px solid;
+  border-radius: 16px;
+  animation: fadeUp .4s ease both;
+  position: relative;
+}
+.end-card::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -24px;
+  width: 2px;
+  height: 24px;
+  background: var(--border);
+  transform: translateX(-50%);
+}
+
+.end-card.success      { border-color: var(--green-bd);  background: var(--green-bg); }
+.end-card.pending-end  { border-color: var(--amber-bd);  background: var(--amber-bg); }
+.end-card.deferred-end { border-color: var(--orange-bd); background: var(--orange-bg); }
+
+.end-icon  { font-size: 40px; margin-bottom: 10px; }
+.end-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  line-height: 1.1;
+}
+.end-card.success      .end-title { color: var(--green); }
+.end-card.pending-end  .end-title { color: var(--amber); }
+.end-card.deferred-end .end-title { color: var(--orange); }
+.end-sub { font-size: 13.5px; color: #475569; line-height: 1.65; }
+
+/* ── RESTART ── */
+.restart-wrap {
+  width: 100%;
+  max-width: 460px;
+  margin-top: 24px;
+  display: none;
+}
+.restart-btn {
+  width: 100%;
+  padding: 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--dim);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.restart-btn:active { background: var(--surface); color: var(--text); }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <h1>I-20 Process</h1>
+    <div class="sub">Enrollment Flowchart</div>
+  </div>
+  <span class="internal-tag">Internal Use</span>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-label" id="progressLabel">Step 1</div>
+</div>
+
+<div class="scroll-area" id="scrollArea">
+  <!-- cards rendered here -->
+  <div class="breadcrumb" id="breadcrumb"></div>
+</div>
+
+<script>
+const nodes = {
+  start: {
+    type:'action', label:'Start',
+    title:'Student Leaves School',
+    desc:'The student departs their current SEVP-certified institution. This triggers the I-20 transition process and starts the 60-day grace period.',
+    next:'grace'
+  },
+  grace: {
+    type:'action', label:'Grace Period',
+    title:'60-Day Grace Period',
+    desc:'The student has 60 days to take action — transfer to a new school, change status, or depart the U.S. to maintain valid F-1 status.',
+    next:'cos'
+  },
+  cos: {
+    type:'decision', label:'Decision',
+    title:'COS Student?',
+    desc:'Does the student have a pending or approved Change of Status (COS) petition filed with USCIS?',
+    yes:'verify', no:'apply'
+  },
+  verify: {
+    type:'action', label:'Verification',
+    title:'Verify COS Status',
+    desc:'Check USCIS records and the I-797C receipt notice to confirm the COS petition\'s status, type, and validity.',
+    next:'i94'
+  },
+  i94: {
+    type:'decision', label:'Decision',
+    title:'I-94 Expiring?',
+    desc:'Review the student\'s I-94 Arrival/Departure Record. Is their authorized period of stay expiring or lapsed?',
+    yes:'defer', no:'apply'
+  },
+  defer: {
+    type:'outcome-defer', label:'I-20 Outcome',
+    title:'Defer I-20 Issued',
+    desc:'Because the I-94 is expiring, a Deferred I-20 is issued. The start date is backdated to pre-date the course start.',
+    end:true
+  },
+  apply: {
+    type:'action', label:'Application',
+    title:'Apply to New School',
+    desc:'The student formally applies to the new SEVP-certified institution. The DSO reviews admission, funding, and enrollment details.',
+    next:'course'
+  },
+  course: {
+    type:'decision', label:'Decision',
+    title:'Course Started?',
+    desc:'Has the semester or course already commenced at the new school at the time of this DSO review?',
+    yes:'cont1', no:'pending'
+  },
+  cont1: {
+    type:'outcome-cont', label:'I-20 Outcome',
+    title:'Continued I-20 Issued',
+    desc:'Courses are underway, so a Continued I-20 is issued immediately, maintaining F-1 status for active enrollment.',
+    end:true
+  },
+  pending: {
+    type:'outcome-pending', label:'I-20 Outcome',
+    title:'Pending I-20 Issued',
+    desc:'The student is accepted but the semester hasn\'t started yet. A Pending I-20 holds status until the semester begins.',
+    next:'semester'
+  },
+  semester: {
+    type:'milestone', label:'Milestone',
+    title:'Semester Begins',
+    desc:'The official semester start date arrives, activating enrollment and triggering the I-20 conversion.',
+    next:'cont2'
+  },
+  cont2: {
+    type:'outcome-cont', label:'I-20 Outcome',
+    title:'Continued I-20 Issued',
+    desc:'The Pending I-20 converts to a Continued I-20 upon semester start, formalizing valid F-1 status at the new school.',
+    end:true
+  }
+};
+
+const typeClass = {
+  action:'type-action', decision:'type-decision',
+  'outcome-defer':'type-outcome-defer',
+  'outcome-pending':'type-outcome-pending',
+  'outcome-cont':'type-outcome-cont',
+  milestone:'type-milestone'
+};
+
+// rough total steps per longest path = 8
+const TOTAL_STEPS = 8;
+let visited = [];
+let stepCount = 0;
+
+function restart() {
+  visited = [];
+  stepCount = 0;
+  document.getElementById('scrollArea').innerHTML =
+    '<div class="breadcrumb" id="breadcrumb"></div>';
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('progressLabel').textContent = 'Step 1';
+  renderStep('start');
+}
+
+function updateProgress() {
+  const pct = Math.min(100, Math.round((stepCount / TOTAL_STEPS) * 100));
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = 'Step ' + stepCount;
+}
+
+function updateBreadcrumb() {
+  const bc = document.getElementById('breadcrumb');
+  if (!bc) return;
+  bc.innerHTML = visited.map(v => {
+    let dot = v.choice === 'yes'
+      ? '<span class="bc-dot" style="background:var(--green)"></span>'
+      : v.choice === 'no'
+        ? '<span class="bc-dot" style="background:#94a3b8"></span>'
+        : '<span class="bc-dot" style="background:var(--blue)"></span>';
+    return `<div class="bc-chip">${dot}${nodes[v.id].title}</div>`;
+  }).join('');
+}
+
+function renderStep(id) {
+  stepCount++;
+  updateProgress();
+
+  const node = nodes[id];
+  const area = document.getElementById('scrollArea');
+  const typeC = typeClass[node.type] || 'type-action';
+  const isDecision = node.type === 'decision';
+
+  let btnsHTML = '';
+  if (isDecision) {
+    btnsHTML = `<div class="choices two-col">
+      <button class="choice-btn yes" id="btn-yes-${id}" onclick="choose('${id}','yes')">✓ Yes</button>
+      <button class="choice-btn no"  id="btn-no-${id}"  onclick="choose('${id}','no')">✗ No</button>
+    </div>`;
+  } else if (!node.end) {
+    btnsHTML = `<div class="choices">
+      <button class="choice-btn next-btn" id="btn-next-${id}" onclick="advance('${id}')">Continue →</button>
+    </div>`;
+  }
+
+  const card = document.createElement('div');
+  card.className = 'step-card';
+  card.id = 'card-' + id;
+  card.innerHTML = `
+    <div class="card-inner ${typeC}">
+      <div class="card-label">${node.label}</div>
+      <div class="card-title">${node.title}</div>
+      <div class="card-desc">${node.desc}</div>
+      ${btnsHTML}
+    </div>`;
+  area.appendChild(card);
+
+  if (node.end) {
+    appendEndBanner(node, area);
+    document.getElementById('progressFill').style.width = '100%';
+    document.getElementById('progressLabel').textContent = 'Complete';
+    visited.push({ id, choice: null });
+    updateBreadcrumb();
+    // show restart
+    let rw = document.createElement('div');
+    rw.className = 'restart-wrap';
+    rw.style.display = 'block';
+    rw.innerHTML = `<button class="restart-btn" onclick="restart()">↺ Start Over</button>`;
+    area.appendChild(rw);
+  }
+
+  setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 80);
+}
+
+function choose(id, choice) {
+  const node = nodes[id];
+  const yes = document.getElementById('btn-yes-' + id);
+  const no  = document.getElementById('btn-no-'  + id);
+  yes.onclick = null; no.onclick = null;
+  if (choice === 'yes') {
+    yes.className = 'choice-btn chosen-yes';
+    no.className  = 'choice-btn faded';
+  } else {
+    no.className  = 'choice-btn chosen-no';
+    yes.className = 'choice-btn faded';
+  }
+  visited.push({ id, choice });
+  updateBreadcrumb();
+  setTimeout(() => renderStep(node[choice]), 230);
+}
+
+function advance(id) {
+  const node = nodes[id];
+  const btn = document.getElementById('btn-next-' + id);
+  btn.className = 'choice-btn chosen-next';
+  btn.onclick = null;
+  visited.push({ id, choice: null });
+  updateBreadcrumb();
+  setTimeout(() => renderStep(node.next), 230);
+}
+
+function appendEndBanner(node, area) {
+  let cls, icon, sub;
+  if (node.type === 'outcome-cont') {
+    cls='success'; icon='✅'; sub='F-1 status is active. Student may proceed with enrollment.';
+  } else if (node.type === 'outcome-pending') {
+    cls='pending-end'; icon='🕐'; sub='Awaiting semester start — Continued I-20 will follow.';
+  } else {
+    cls='deferred-end'; icon='📋'; sub='I-20 backdated to cover the course start gap.';
+  }
+  const el = document.createElement('div');
+  el.className = 'end-card ' + cls;
+  el.innerHTML = `
+    <div class="end-icon">${icon}</div>
+    <div class="end-title">${node.title}</div>
+    <div class="end-sub">${sub}</div>`;
+  area.appendChild(el);
+  setTimeout(() => el.scrollIntoView({ behavior:'smooth', block:'center' }), 350);
+}
+
+restart();
+</script>
+</body>
+</html>
